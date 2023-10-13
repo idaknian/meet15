@@ -1,3 +1,5 @@
+from flask_login import UserMixin
+
 from application import db
 from datetime import datetime
 
@@ -12,6 +14,11 @@ class Users(db.Model):
     join_date = db.Column(db.DateTime, default=datetime.utcnow)
     pp = db.Column(db.String(128), default="default.jpg")
     status = db.Column(db.Boolean, default=True)
+    following_users = db.relationship("Relationship", foreign_keys="Relationship.id_following", backref="following", lazy=True)
+    follower_users = db.relationship("Relationship", foreign_keys="Relationship.id_follower", backref="follower" lazy=True)
+    posts = db.relationship("Post" backref="posts_owner", lazy=True)
+    comments = db.relationship("Comment" backref="comments_owner" lazy=True)
+    likes = db.relationship("Like" backref="likes_owner" lazy=True)
 
 class Relationship(db.Model):
     __tablename__ = 'relationship'
@@ -29,6 +36,8 @@ class Post(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     author.id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     status = db.Column(db.Boolean, default=True)
+    comments = db.relationship("Comment" backref="commented" lazy=True)
+    likes = db.relationship("Like" backref="liked" lazy=True)
 
 class Comment(Db.Model):
     __tablename__ = 'comments'
