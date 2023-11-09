@@ -20,17 +20,25 @@ class SignUpForm(FlaskForm):
     submit              = SubmitField("sign up")
 
 class EditProfileForm(FlaskForm):
-    name                = StringField("name", validators=[DataRequired(), Length(min=4)])
     username            = StringField("username", validators=[DataRequired(), Length(min=4, max=12), exists_username])
     email               = EmailField("email", validators=[DataRequired(), Email(), exists_email])
-    bio                 = StringField("bio", validators=[Length(min=10)])
     profile_pic         = FileField("profile picture", validators=[FileAllowed(["jpg", "png", "jpeg"])])
+    password            = PasswordField("password", validators=[DataRequired(), Length(min=8)])
     submit              = SubmitField("update profile")
 
+class EditProfileForm(SignUpForm):
+    password = None
+    confirm_password = None
+    email = None
+    bio = StringField("bio")
+    profile_pic = FileField("profile picture", validators=[DataRequired(["jpg", "png", "jpeg"])])
+    submit = SubmitField("update profile")
+
 class ResetPasswordForm(FlaskForm):
-    new_password         = PasswordField("new password", validators=[DataRequired(), Length(min=8)])
+    old_password        = PasswordField("old password", validators=[DataRequired(), Length(min=8)])
+    new_password        = PasswordField("new password", validators=[DataRequired(), Length(min=8)])
     confirm_new_password = PasswordField("confirm new password", validators=[DataRequired(), Length(min=8), EqualTo("new_password")])
-    submit               = SubmitField("reset password")
+    submit              = SubmitField("reset password")
 
 class ForgotPasswordForm(FlaskForm):
     email               = EmailField("email", validators=[DataRequired(), not_exists_email])
