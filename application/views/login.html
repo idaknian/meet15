@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-
+	
 {% block content %}
 	<div class="">
         <form method="POST" action="">
@@ -42,11 +42,11 @@
 			<div class="">
 				{{ form.submit(class="btn btn-outline-info") }}
 				<small class="">
-					<a href="{{ url_for('reset') }}">Lupa Kata Sandi?</a>
+					<a href="{{ url_for('forgot') }}">Forgot your password?</a>
 				</small>
 			</div>
 			<small class="">
-				<a href="{{ url_for('signup') }}">Belum punya akun ?</a>
+				<a href="{{ url_for('signup') }}">Have no account ?</a>
 			</small>
 
 		</form>

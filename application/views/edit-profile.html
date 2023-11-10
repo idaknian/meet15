@@ -5,22 +5,7 @@
         <form method="POST" action="">
 			{{ form.hidden_tag() }}
 			<fieldset class="">
-				<legend class="">Register</legend>
-
-				<div class="">
-					{{ form.profile_pic.label(class="") }}
-
-					{% if form.profile_pic.errors%}
-						{{ form.pfp(class="") }}
-						<div class="">
-							{% for error in form.profile_pic.errors %}
-								<span>{{ error }}</span>
-							{% endfor %}
-						</div>
-					{% else %}
-						{{ form.profile_pic(class=" ") }}
-					{% endif %}
-				</div>
+				<legend class="">Edit Profile</legend>
 
 				<div class="">
 					{{ form.username.label(class="") }}
@@ -68,40 +53,37 @@
 				</div>
 
 				<div class="">
-					{{ form.password.label(class="") }}
+					{{ form.profile_pic.label(class="") }}
 
-					{% if form.password.errors%}
-						{{ form.password(class="") }}
+					{% if form.profile_pic.errors%}
+						{{ form.profile_pic(class="") }}
 						<div class="">
-							{% for error in form.password.errors %}
+							{% for error in form.profile_pic.errors %}
 								<span>{{ error }}</span>
 							{% endfor %}
 						</div>
 					{% else %}
-						{{ form.password(class=" ") }}
+						{{ form.profile_pic(class=" ") }}
 					{% endif %}
 				</div>
 
 				<div class="">
-					{{ form.confirm_password.label(class="") }}
+					{{ form.bio.label(class="") }}
 
-					{% if form.confirm_password.errors%}
-						{{ form.confirm_password(class="") }}
+					{% if form.bio.errors%}
+						{{ form.bio(class="") }}
 						<div class="">
-							{% for error in form.confirm_password.errors %}
+							{% for error in form.bio.errors %}
 								<span>{{ error }}</span>
 							{% endfor %}
 						</div>
 					{% else %}
-						{{ form.confirm_password(class=" ") }}
+						{{ form.bio(class=" ") }}
 					{% endif %}
 				</div>
 			</fieldset>
 			<div class="">
 				{{ form.submit(class="btn btn-outline-info") }}
-                <small class="">
-                    <a href="{{ url_for('login') }}">Have an account already?</a>
-                </small>
 			</div>
 		</form>
 	</div>
