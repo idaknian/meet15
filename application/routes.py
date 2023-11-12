@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, make_response, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 
 from application import app
@@ -120,5 +120,21 @@ def edit_post():
     form = EditPostForm()
     return render_template('edit-post.html', title="Edit Post", form=form)
 
+@app.route('/about')
+def about():
+    return render_template('about.html', title="About")
+
+@app.route('/like/<int:psot_id>', methods=["POST"])
+@login_required
+def like(post_id):
+    like = Like.query.filter_by(user_id == current_user and post_id == post_id)
+    if not like:
+        like = Liker(user_id=current_user.id, post_id=post_id)
+        db.session.add(like)
+        db.session.commit()
+        return make_response(200, jsonify({"status" : True}))
+
+        db.session.delete(like)
+        db.session.commit()
 if __name__ == '__main__':
     app.run(debug=True)
