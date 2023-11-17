@@ -1,0 +1,48 @@
+/* styles.css */
+
+body {
+    background-color: #ecf0f1; /* Set a light background color for the entire page */
+}
+
+.profile-card {
+    background-color: #3498db; /* Set a blue background color for the profile card */
+    color: #fff; /* Set text color to white */
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto; /* Center the profile card */
+    width: 70%; /* Adjust the width of the profile card */
+}
+
+.profile-photo img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.profile-info {
+    margin-top: 20px;
+}
+
+.profile-info h2 {
+    color: #fff; /* Set text color to white */
+}
+
+.image-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.image-item {
+    display: inline-block;
+    margin: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}

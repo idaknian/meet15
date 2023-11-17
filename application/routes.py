@@ -9,7 +9,7 @@ from application.utils import save_image
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('profile', username = current_user.username))
+        return redirect(url_for('index'))
 
     form = LoginForm()
 
@@ -124,17 +124,35 @@ def edit_post():
 def about():
     return render_template('about.html', title="About")
 
-@app.route('/like/<int:psot_id>', methods=["POST"])
+@app.route('/like/<int:post_id>', methods=["POST"])
 @login_required
 def like(post_id):
-    like = Like.query.filter_by(user_id == current_user and post_id == post_id)
+    like = Like.query.filter_by(user_id=current_user.id, post_id=post_id).first()
     if not like:
-        like = Liker(user_id=current_user.id, post_id=post_id)
+        like = Like(user_id=current_user.id, post_id=post_id)
         db.session.add(like)
         db.session.commit()
-        return make_response(200, jsonify({"status" : True}))
+        return jsonify({"status": True})
 
-        db.session.delete(like)
+    db.session.delete(like)
+    db.session.commit()
+    return jsonify({"status": False})
+
+@app.route('/like-toggle', methods=['POST'])
+@login_required
+def like_toggle():
+    data = request.json
+    post_id = int(data['postId'])
+    like = Like.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+    if not like:
+        like = Like(user_id=current_user.id, post_id=post_id)
+        db.session.add(like)
         db.session.commit()
+        return jsonify({"status": True})
+
+    db.session.delete(like)
+    db.session.commit()
+    return jsonify({"status": False})
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,75 +1,78 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block content %}
-    <div class="form-box" style="border: 1px black solid;">
-        <h2>Create a New Post</h2>
-        <form method="POST" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{ form.post_pic.label(class="form-control-label") }}
-                {{ form.post_pic(class="form-control-file") }}
-                {% for error in form.post_pic.errors %}
-                    <span class="text-danger">{{ error }}</span>
-                {% endfor %}
-            </div>
-            <div class="form-group">
-                {{ form.caption.label(class="form-control-label") }}
-                {{ form.caption(class="form-control-file") }}
-                {% for error in form.caption.errors %}
-                    <span class="text-danger">{{ error }}</span>
-                {% endfor %}
-                </div>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-primary")}}
-            </div>
-        </form>
-    </div>
-
-    <div class="post-container">
-        {% for post in posts %}
-            <div class="post" style="border: 1px black solid; margin: 10px  0px;">
-                <div class="post-header">
-                    <img src="{{ url_for('static', filename='images/' + post.posts_owner.profile_pic) }}" alt="Post owner" style="height: 30px; width: auto;">
-                    <h2>{{ post.posts_owner.username }}</h2>
-                </div>
-                <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image">
-                <p>{{ post.caption }} </p>
-
-                <div class="post-footer">
-                    <span id="likeBtn">❤{{ post.likes | length }}</span><span id="likeCounter">{{post.likes | length }}</span>
-                    <span id="commentBtn">🚩{{ post.comment | length }}</span><span id="commentCounter">{{ post.comments | length }}</span>
-                </div>
-
-            </div>
+  <div class="new-post-box">
+    <h2>Create a New Post</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.post_pic.label(class="form-control-label") }}
+        {{ form.post_pic(class="form-control-file") }}
+        {% for error in form.post_pic.errors %}
+          <span class="text-danger">{{ error }}</span>
         {% endfor %}
-    </div>
-    <script>
-        document.querySelectorAll("#likeBtn").forEach(btn => {
-            btn.addEventListener("click", function() {
-                // console.log(this,dataset.postId);
-                const xhr = new XMLHttp();
-                xhr.open("POST", '/like/${this.dataset.postId}', true);
-                xhr.setrequestHeader('Content-Type', 'application/json;charset=utf-8');
-
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        const response = JSON.parse(xhr.responseText);
-                        console.log(response.status);
-                    }
-                };
-                
-                xhr.send();
-
-            })
-        });
-    </script>
-    <div class="pagination-box">
-        {% for page_number in posts.iter_pages() %}
-            {% if page_number == posts.page %}
-                <a href="{{ url_for('index', page=page_number) }}" style="color:red">{{page_number}}</a>
-            {% else %}
-                <a href="{{ url_for('index', page=page_number) }}" style="color: black;">{{page_number}}</a>
-            {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.caption.label(class="form-control-label") }}
+        {{ form.caption(class="form-control") }}
+        {% for error in form.caption.errors %}
+          <span class="text-danger">{{ error }}</span>
         {% endfor %}
-    </div>
+      </div>
+      <div class="form-group">
+        {{ form.submit(class="btn btn-primary", label="Submit") }}
+      </div>
+    </form>
+  </div>
+
+  <div class="post-container">
+    {% for post in posts.items %}
+      <div class="post">
+        <div class="post-header">
+          {% if post.posts_owner.profile_pic %}
+            <img src="{{ url_for('static', filename='images/' + post.posts_owner.profile_pic) }}" alt="Post Image" style="height: 30px; width: 30px;">
+          {% else %}
+            <p>No profile picture available</p>
+          {% endif %}
+          <h2>{{ post.posts_owner.username }}</h2>
+        </div>
+        <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image">
+        <p>{{ post.caption }}</p>
+        <div class="post-footer">
+          <span id="likeBtn" data-post-id="{{ post.id }}">❤</span><span id="likeCounter">{{ post.likes | length }}</span>
+          <span id="commentBtn" data-post-id="{{ post.id }}">🚩</span><span id="commentCounter">{{ post.comments | length }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    document.querySelectorAll("#likeBtn").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://127.0.0.1:5000/like', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            console.log(response.status);
+          }
+        };
+
+        const data = JSON.stringify({ 'postId': this.dataset.postId });
+        xhr.send(data);
+      });
+    });
+  </script>
+
+  <div class="pagination-box">
+    {% for page_number in posts.iter_pages() %}
+      {% if page_number == posts.page %}
+        <a href="{{ url_for('index', page=page_number) }}" style="color:red">{{ page_number }}</a>
+      {% else %}
+        <a href="{{ url_for('index', page=page_number) }}" style="color: black;">{{ page_number }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
 {% endblock content %}

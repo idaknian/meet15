@@ -1,25 +1,83 @@
 {% extends "layout.html" %}
 
 {% block content %}
+    <style>
+        body {
+            background-color: #ecf0f1; /* Set a light background color for the entire page */
+            font-family: 'Arial', sans-serif; /* Set a default font family */
+        }
+
+        .profile-card {
+            background-color: #3498db; /* Set a blue background color for the profile card */
+            color: #fff; /* Set text color to white */
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto; /* Center the profile card */
+            width: 70%; /* Adjust the width of the profile card */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-photo img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            margin-top: 20px;
+        }
+
+        .profile-info h2 {
+            color: #fff;
+        }
+
+        .profile-info p {
+            color: #ccc;
+        }
+
+        .image-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .image-item {
+            display: inline-block;
+            margin: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+    </style>
+
     <div class="profile-card">
         <div class="profile-photo">
-            <!-- {% if current_user.profile_pic == NULL %} -->
+            {% if current_user.profile_pic is none %}
                 <img src="{{ url_for('static', filename='/default.jpg' ) }}" alt="Profile Photo">
-            <!-- {% else %}
-                <img src="{{ url_for('static', filename='/.jpg' ) }}" alt="">
-            {% endif %} -->
+            {% else %}
+                <img src="{{ url_for('static', filename='/' + current_user.profile_pic ) }}" alt="Profile Photo">
+            {% endif %}
         </div>
         <div class="profile-info">
-            <h2>{{current_user.fullname}}</h2>
+            <h2>{{ current_user.fullname }}</h2>
             <p>{{ current_user.bio }}</p>
             <p>Following: {{ current_user.following_users|length }}</p>
-            <p>Follower: {{ current_user.follower_users|length }}</p>
+            <p>Followers: {{ current_user.follower_users|length }}</p>
         </div>
     </div>
 
     <div class="image-container">
         {% for post in posts %}
-            <div class="image-item"><img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image"></div>
+            <div class="image-item">
+                <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image">
+            </div>
         {% endfor %}
     </div>
 {% endblock content %}
