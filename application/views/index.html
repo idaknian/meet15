@@ -1,78 +1,210 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <div class="new-post-box">
-    <h2>Create a New Post</h2>
-    <form method="POST" enctype="multipart/form-data">
-      {{ form.hidden_tag() }}
-      <div class="form-group">
-        {{ form.post_pic.label(class="form-control-label") }}
-        {{ form.post_pic(class="form-control-file") }}
-        {% for error in form.post_pic.errors %}
-          <span class="text-danger">{{ error }}</span>
+    <style>
+        body {
+            background-color: #ecf0f1; /* Set a light background color for the entire page */
+            font-family: 'Arial', sans-serif; /* Set a default font family */
+            color: #2c3e50; /* Set text color to dark */
+        }
+
+        .new-post-box {
+            background-color: #3498db; /* Set a blue background color for the new post box */
+            color: #fff; /* Set text color to white */
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto; /* Center the new post box */
+            width: 70%; /* Adjust the width of the new post box */
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control-label {
+            color: #fff;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .post-container {
+          margin-top: 20px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+        }
+
+        .post {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            width: 300px;
+            overflow: hidden; /* Ensure that the image doesn't overflow */
+        }
+
+        .post img {
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid #ddd; /* Add a bottom border to separate image and caption */
+        }
+
+        .post p {
+            padding: 10px;
+            margin: 0;
+            color: #333; /* Set text color to a dark color */
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd; /* Add a bottom border to separate header and image */
+        }
+
+        .post-header img {
+            margin-right: 10px;
+            border-radius: 50%; /* Make the profile picture round */
+        }
+
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .pagination-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination-box a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .pagination-box a:hover {
+            color: #3498db;
+        }
+
+        .pagination-box a:active {
+            color: red;
+        }
+
+        .pagination-box a:focus {
+            outline: none;
+        }
+
+        .text-danger {
+            color: #e74c3c; /* Set text color to red for error messages */
+        }
+
+        .btn-primary {
+        background-color: #fff; /* Set background color to white */
+        color: #3498db; /* Set text color to the blue color */
+        border: 1px solid #3498db; /* Add a border with the blue color */
+        }
+
+        .btn-primary:hover {
+            background-color: #3498db; /* Change background color on hover to blue */
+            color: #fff; /* Change text color on hover to white */
+        }
+    </style>
+
+    <div class="new-post-box">
+        <h2>Create a New Post</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.post_pic.label(class="form-control-label") }}
+                {{ form.post_pic(class="form-control-file") }}
+                {% for error in form.post_pic.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.caption.label(class="form-control-label") }}
+                {{ form.caption(class="form-control") }}
+                {% for error in form.caption.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary", label="Submit") }}
+            </div>
+        </form>
+    </div>
+
+    <div class="post-container">
+        {% for post in posts.items %}
+            <div class="post">
+                <div class="post-header">
+                    {% if post.posts_owner.profile_pic %}
+                        <img src="{{ url_for('static', filename='images/' + post.posts_owner.profile_pic) }}" alt="Post Image" style="height: 30px; width: 30px;">
+                    {% else %}
+                        <p>No profile picture available</p>
+                    {% endif %}
+                    <h2>{{ post.posts_owner.username }}</h2>
+                </div>
+                <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image">
+                <p>{{ post.caption }}</p>
+                <div class="post-footer">
+                    <span id="likeBtn" data-post-id="{{ post.id }}">❤</span><span id="likeCounter">{{ post.likes | length }}</span>
+                    <span id="commentBtn" data-post-id="{{ post.id }}">🚩</span><span id="commentCounter">{{ post.comments | length }}</span>
+                </div>
+            </div>
         {% endfor %}
-      </div>
-      <div class="form-group">
-        {{ form.caption.label(class="form-control-label") }}
-        {{ form.caption(class="form-control") }}
-        {% for error in form.caption.errors %}
-          <span class="text-danger">{{ error }}</span>
+    </div>
+
+    <script>
+        document.querySelectorAll("#likeBtn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'http://127.0.0.1:5000/like', true);
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        console.log(response.status);
+                    }
+                };
+
+                const data = JSON.stringify({ 'postId': this.dataset.postId });
+                xhr.send(data);
+            });
+        });
+    </script>
+
+    <div class="pagination-box">
+        {% for page_number in posts.iter_pages() %}
+            {% if page_number == posts.page %}
+                <a href="{{ url_for('index', page=page_number) }}" style="color:red">{{ page_number }}</a>
+            {% else %}
+                <a href="{{ url_for('index', page=page_number) }}" style="color: black;">{{ page_number }}</a>
+            {% endif %}
         {% endfor %}
-      </div>
-      <div class="form-group">
-        {{ form.submit(class="btn btn-primary", label="Submit") }}
-      </div>
-    </form>
-  </div>
-
-  <div class="post-container">
-    {% for post in posts.items %}
-      <div class="post">
-        <div class="post-header">
-          {% if post.posts_owner.profile_pic %}
-            <img src="{{ url_for('static', filename='images/' + post.posts_owner.profile_pic) }}" alt="Post Image" style="height: 30px; width: 30px;">
-          {% else %}
-            <p>No profile picture available</p>
-          {% endif %}
-          <h2>{{ post.posts_owner.username }}</h2>
-        </div>
-        <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image">
-        <p>{{ post.caption }}</p>
-        <div class="post-footer">
-          <span id="likeBtn" data-post-id="{{ post.id }}">❤</span><span id="likeCounter">{{ post.likes | length }}</span>
-          <span id="commentBtn" data-post-id="{{ post.id }}">🚩</span><span id="commentCounter">{{ post.comments | length }}</span>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-
-  <script>
-    document.querySelectorAll("#likeBtn").forEach(btn => {
-      btn.addEventListener("click", function () {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://127.0.0.1:5000/like', true);
-        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            console.log(response.status);
-          }
-        };
-
-        const data = JSON.stringify({ 'postId': this.dataset.postId });
-        xhr.send(data);
-      });
-    });
-  </script>
-
-  <div class="pagination-box">
-    {% for page_number in posts.iter_pages() %}
-      {% if page_number == posts.page %}
-        <a href="{{ url_for('index', page=page_number) }}" style="color:red">{{ page_number }}</a>
-      {% else %}
-        <a href="{{ url_for('index', page=page_number) }}" style="color: black;">{{ page_number }}</a>
-      {% endif %}
-    {% endfor %}
-  </div>
+    </div>
 {% endblock content %}

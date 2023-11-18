@@ -12,6 +12,9 @@
 
         body {
             padding: 20px;
+            background-color: #ecf0f1; /* Set a light background color for the entire page */
+            font-family: 'Arial', sans-serif; /* Set a default font family */
+            color: #2c3e50; /* Set text color to dark */
         }
 
         section.content {
@@ -26,6 +29,10 @@
 
         div.new-post-box {
             padding: 5px;
+            background-color: #3498db; /* Set a blue background color for the new post box */
+            color: #fff; /* Set text color to white */
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
         div.post-container {
@@ -53,12 +60,13 @@
         }
 
         .image-item {
-            flex: 0 0 calc(33.33% - 20px); /* Adjust the width and margin as needed */
+            flex: 0 0 calc(33.33% - 20px);
             margin: 10px;
             box-sizing: border-box;
             overflow: hidden;
             border: 1px solid #ddd;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff; /* Set a white background color for image items */
         }
 
         .image-item img {
@@ -108,6 +116,26 @@
 
         .post-header img {
             border-radius: 50%;
+        }
+
+        .alert-box {
+            margin-top: 20px;
+        }
+
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert.alert-success {
+            background-color: #2ecc71; /* Set a green background color for success messages */
+            color: #fff; /* Set text color to white */
+        }
+
+        .alert.alert-danger {
+            background-color: #e74c3c; /* Set a red background color for error messages */
+            color: #fff; /* Set text color to white */
         }
     </style>
     {% if title %}
